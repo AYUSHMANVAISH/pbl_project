@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnomXShield | PBL Presentation 2026</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .pres-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pres-nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pres-nav-brand .shield {
+            font-size: 28px;
+        }
+
+        .pres-nav-brand h2 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pres-nav-brand small {
+            display: block;
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .pres-nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .pres-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: color 0.3s;
+        }
+
+        .pres-nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .pres-nav-links a.dash-link {
+            color: var(--accent-green);
+        }
+
+        .pres-nav-links a.dash-link:hover {
+            color: #34d399;
+        }
+
+        .pres-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+        }
+
+        .pres-hero {
+            text-align: center;
+            padding: 60px 0 80px;
+        }
+
+        .pres-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .pres-hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .pres-hypothesis {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            font-style: italic;
+            font-size: 16px;
+            line-height: 1.7;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .pres-section {
+            margin-bottom: 60px;
+        }
+
+        .pres-section-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pres-section-title span {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pres-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .pres-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .pres-grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+
+            .pres-grid-2,
+            .pres-grid-3,
+            .pres-grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .pres-hero h1 {
+                font-size: 36px;
+            }
+        }
+
+        .pres-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .pres-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .pres-card h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .pres-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .pres-card .card-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .pres-card.border-left-blue {
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .pres-card.border-right-cyan {
+            border-right: 4px solid var(--accent-cyan);
+        }
+
+        .pres-card.border-right-purple {
+            border-right: 4px solid var(--accent-purple);
+        }
+
+        .pres-card.border-top-cyan {
+            border-top: 4px solid var(--accent-cyan);
+        }
+
+        .pres-card.border-bottom-blue {
+            border-bottom: 4px solid var(--accent-blue);
+        }
+
+        .pres-card.highlight-green {
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .pres-card .card-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+            text-align: center;
+        }
+
+        .pres-card .card-center {
+            text-align: center;
+        }
+
+        .pres-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 3px;
+        }
+
+        .pres-tag.blue {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .pres-tag.purple {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .pres-tag.green {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .arch-node {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .arch-node.red {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+
+        .arch-arrow {
+            color: var(--accent-blue);
+            font-size: 16px;
+        }
+
+        .results-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 36px;
+            backdrop-filter: blur(10px);
+            border-top: 4px solid var(--accent-cyan);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .metric-row .label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        .metric-row .value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .metric-row .value.blue {
+            color: var(--accent-blue);
+        }
+
+        .metric-row .value.purple {
+            color: var(--accent-purple);
+        }
+
+        .metric-row .value.green {
+            color: var(--accent-green);
+        }
+
+        .metric-row .value.cyan {
+            color: var(--accent-cyan);
+        }
+
+        .bar-item {
+            margin-bottom: 10px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .bar-label .name {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .bar-label .pct {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+
+        .bar-track {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1.5s ease;
+        }
+
+        .bar-fill.blue {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+        }
+
+        .bar-fill.purple {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+        }
+
+        .bar-fill.yellow {
+            background: linear-gradient(90deg, var(--accent-orange), #fbbf24);
+        }
+
+        .bar-fill.red {
+            background: linear-gradient(90deg, var(--accent-red), #f87171);
+        }
+
+        .cm-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .cm-cell {
+            text-align: center;
+            padding: 20px 12px;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .cm-cell .big {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .cm-cell .small {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .team-section {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .team-section .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+        }
+
+        .team-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .team-card .role {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .team-card .name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .team-card .reg {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .team-card.guide {
+            border-bottom: 4px solid var(--accent-blue);
+        }
+
+        .team-card.guide .role {
+            color: var(--accent-blue);
+        }
+
+        .team-card.member {
+            border-bottom: 4px solid var(--accent-purple);
+        }
+
+        .team-card.member .role {
+            color: var(--accent-purple);
+        }
+
+        .timer-box {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background: white;
+            color: #020617;
+            padding: 12px 24px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--accent-blue);
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-box .icon {
+            font-size: 20px;
+            color: var(--accent-blue);
+        }
+
+        .timer-box .time {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        @keyframes timerFlicker {
+
+            0%,
+            100% {
+                background: white;
+            }
+
+            50% {
+                background: #fca5a5;
+            }
+        }
+
+        .timer-box.warning {
+            animation: timerFlicker 1s infinite;
+            border-color: var(--accent-red) !important;
+        }
+
+        .timer-box.stopped {
+            background: #991b1b !important;
+            color: white !important;
+            border-color: #f87171 !important;
+            animation: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="timer-box" id="timerContainer">
+        <span class="icon" id="timerIcon">⏳</span>
+        <span class="time" id="displayTime">00:00</span>
+    </div>
+
+    <nav class="pres-nav">
+        <div class="pres-nav-brand">
+            <span class="shield">🛡️</span>
+            <div>
+                <h2>PBL 2026</h2>
+                <small>Dept. of Computer Science & Engineering</small>
+            </div>
+        </div>
+        <div class="pres-nav-links">
+            <a href="#problem">Problem</a>
+            <a href="#methodology">Methodology</a>
+            <a href="#results">Results</a>
+            <a href="#team">Team</a>
+            <a href="/" class="dash-link">⬅ Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="pres-container">
+
+        <section class="pres-hero">
+            <div class="pres-badge">AI-Powered Network Security</div>
+            <h1>AnomXShield</h1>
+            <p class="pres-hypothesis">
+                "Can a machine learning system combining a Random Forest classifier with domain-specific rule-based
+                heuristics achieve high-accuracy, real-time network intrusion detection across multiple attack
+                categories using flow-level network traffic analysis?"
+            </p>
+        </section>
+
+        <section id="problem" class="pres-section">
+            <div class="pres-grid-2">
+                <div class="pres-card border-left-blue"
+                    style="display:flex; flex-direction:column; justify-content:center;">
+                    <h3 style="font-size:24px; margin-bottom:16px;">Problem Statement</h3>
+                    <p style="text-align:justify;">
+                        Cyber attacks on network infrastructure are growing in volume and sophistication. Traditional
+                        signature-based intrusion detection systems fail against zero-day attacks and evolving threat
+                        patterns. Organizations need intelligent, adaptive detection systems that can identify anomalous
+                        network behavior in real-time — across diverse attack vectors including DDoS, port scanning,
+                        brute-force, botnets, and web application attacks — without generating excessive false alarms.
+                    </p>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div class="pres-card border-right-cyan">
+                        <div class="card-label" style="color: var(--accent-cyan);">Literature Review</div>
+                        <p>
+                            Existing NIDS approaches: <strong style="color:var(--text-primary)">Snort/Suricata</strong>
+                            (rule-based, misses unknown attacks), <strong style="color:var(--text-primary)">Deep
+                                Learning</strong> (high accuracy but black-box), and <strong
+                                style="color:var(--text-primary)">single-model ML</strong> (either supervised or
+                            unsupervised alone). No single approach achieves high precision AND recall across all 14
+                            attack types.
+                        </p>
+                    </div>
+                    <div class="pres-card border-right-purple">
+                        <div class="card-label" style="color: var(--accent-purple);">Research Gap / Innovation</div>
+                        <p>
+                            AnomXShield uses a <strong style="color:var(--text-primary)">dual-layer hybrid
+                                architecture</strong>: Random Forest classifier + Rule Engine. This achieves
+                            <strong style="color:var(--accent-cyan)">99.2% precision & 98.8% recall</strong> —
+                            outperforming single-model approaches while maintaining interpretability.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="methodology" class="pres-section">
+            <div class="pres-section-title">System <span>Methodology</span></div>
+            <div class="pres-grid-3">
+                <div class="pres-card card-center">
+                    <span class="card-icon">🗄️</span>
+                    <div class="card-label" style="color:var(--text-secondary); text-align:center;">Dataset</div>
+                    <p style="text-align:center;">CICIDS2017 — <strong style="color:var(--text-primary)">2.8M+
+                            flows</strong>, 14 attack types, 5 days of traffic. 10 features extracted: packets/sec,
+                        bytes/sec, duration, SYN/ACK counts, IAT, packet size, port.</p>
+                    <div style="text-align:center; margin-top:12px;">
+                        <span class="pres-tag blue">2.8M Flows</span>
+                        <span class="pres-tag purple">14 Attacks</span>
+                        <span class="pres-tag green">10 Features</span>
+                    </div>
+                </div>
+                <div class="pres-card card-center">
+                    <span class="card-icon">🧠</span>
+                    <div class="card-label" style="color:var(--text-secondary); text-align:center;">Model / Architecture
+                    </div>
+                    <p style="text-align:center;">Dual-layer: <strong style="color:var(--text-primary)">Random
+                            Forest</strong> (100 trees, supervised classification) + <strong
+                            style="color:var(--text-primary)">Rule
+                            Engine</strong> (DDoS, PortScan, BruteForce heuristics). 80/20 train-test split with
+                        flow-level prediction and port-level aggregation.</p>
+                    <div class="arch-flow">
+                        <span class="arch-node">Flows</span>
+                        <span class="arch-arrow">→</span>
+                        <span class="arch-node">RF Model</span>
+                        <span class="arch-arrow">→</span>
+                        <span class="arch-node">Rules</span>
+                        <span class="arch-arrow">→</span>
+                        <span class="arch-node red">Threats</span>
+                    </div>
+                </div>
+                <div class="pres-card card-center highlight-green">
+                    <span class="card-icon">🐍</span>
+                    <div class="card-label" style="color:var(--accent-green); text-align:center;">Live Execution</div>
+                    <p style="text-align:center;">Real-time dashboard with Flask. Live scan simulation, per-attack
+                        detection, confusion matrix visualization.</p>
+                    <div style="text-align:center; margin-top:16px;">
+                        <a href="/" class="btn btn-primary"
+                            style="display:inline-flex; text-decoration:none; font-size:12px; padding:10px 24px;">🔍
+                            View Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results" class="pres-section">
+            <div class="pres-section-title">Results & <span>Analysis</span></div>
+            <div class="results-card">
+                <div class="pres-grid-2" style="margin-bottom:30px;">
+                    <div style="height:280px;"><canvas id="resultsChart"></canvas></div>
+                    <div>
+                        <div class="metric-row"><span class="label">Precision</span><span
+                                class="value blue">99.2%</span></div>
+                        <div class="metric-row"><span class="label">Recall</span><span class="value purple">98.8%</span>
+                        </div>
+                        <div class="metric-row"><span class="label">F1 Score</span><span
+                                class="value green">99.0%</span></div>
+                        <div class="metric-row"><span class="label">Accuracy</span><span class="value cyan">99.6%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3
+                    style="text-align:center; font-size:12px; text-transform:uppercase; letter-spacing:3px; color:var(--text-secondary); margin:30px 0 20px;">
+                    Per-Attack Detection Rate</h3>
+                <div class="pres-grid-2">
+                    <div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">PortScan</span><span class="pct"
+                                    style="color:var(--accent-cyan)">100%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:100%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">FTP-Patator</span><span class="pct"
+                                    style="color:var(--accent-cyan)">100%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:100%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">DoS Slowhttptest</span><span class="pct"
+                                    style="color:var(--accent-cyan)">100%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:100%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">DDoS</span><span class="pct"
+                                    style="color:var(--accent-cyan)">99.8%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:99.8%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">DoS slowloris</span><span class="pct"
+                                    style="color:var(--accent-cyan)">99.7%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:99.7%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">DoS Hulk</span><span class="pct"
+                                    style="color:var(--accent-cyan)">99.6%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill blue" style="width:99.6%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">SSH-Patator</span><span class="pct"
+                                    style="color:var(--accent-purple)">99.3%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill purple" style="width:99.3%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">DoS GoldenEye</span><span class="pct"
+                                    style="color:var(--accent-purple)">97.5%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill purple" style="width:97.5%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">Bot</span><span class="pct"
+                                    style="color:var(--accent-orange)">56.7%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill yellow" style="width:56.7%"></div>
+                            </div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-label"><span class="name">Web Attack – XSS</span><span class="pct"
+                                    style="color:var(--accent-red)">3.2%</span></div>
+                            <div class="bar-track">
+                                <div class="bar-fill red" style="width:3.2%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cm-grid">
+                    <div class="cm-cell">
+                        <div class="big" style="color:var(--accent-green)">5,499</div>
+                        <div class="small">True Positives</div>
+                    </div>
+                    <div class="cm-cell">
+                        <div class="big" style="color:var(--accent-cyan)">22,699</div>
+                        <div class="small">True Negatives</div>
+                    </div>
+                    <div class="cm-cell">
+                        <div class="big" style="color:var(--accent-orange)">45</div>
+                        <div class="small">False Positives</div>
+                    </div>
+                    <div class="cm-cell">
+                        <div class="big" style="color:var(--accent-red)">65</div>
+                        <div class="small">False Negatives</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="pres-section team-section">
+            <div class="section-label">Academic Credits</div>
+            <div class="team-cards">
+                <div class="team-card guide">
+                    <div class="role">Project Guide</div>
+                    <div class="name">Dr. Rajat Goel</div>
+                </div>
+                <div class="team-card member">
+                    <div class="role">Developer</div>
+                    <div class="name">Ayushman Vaish</div>
+                    <div class="reg">2427030068</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="footer">
+        <p>Manipal University Jaipur • Department of Computer Science & Engineering • 2026</p>
+    </footer>
+
+    <script>
+        let sec = 0, timer = null;
+        function startTimer() {
+            timer = setInterval(() => {
+                sec++;
+                let m = Math.floor(sec / 60), s = sec % 60;
+                document.getElementById('displayTime').innerText =
+                    m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+                if (sec >= 480 && sec < 600) {
+                    document.getElementById('timerContainer').classList.add('warning');
+                    document.getElementById('timerIcon').innerText = '⏰';
+                } else if (sec >= 600) {
+                    clearInterval(timer);
+                    document.getElementById('timerContainer').classList.remove('warning');
+                    document.getElementById('timerContainer').classList.add('stopped');
+                    document.getElementById('displayTime').innerText = '10:00';
+                    document.getElementById('timerIcon').innerText = '🛑';
+                }
+            }, 1000);
+        }
+        startTimer();
+
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Baseline (Single Model)', 'AnomXShield (RF + Rules)'],
+                datasets: [{
+                    data: [62, 99.2],
+                    backgroundColor: ['#1e293b', '#3b82f6'],
+                    borderRadius: 12,
+                    barThickness: 50
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: c => c.parsed.y + '% Precision' } }
+                },
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#6b7280', callback: v => v + '%' } },
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { weight: 'bold' } } }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

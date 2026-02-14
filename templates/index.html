@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnomXShield - Network Intrusion Detection</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <h1>AnomXShield</h1>
+            </div>
+            <p class="tagline">AI-Powered Network Intrusion Detection System</p>
+        </header>
+
+        <div class="status-bar" id="statusBar">
+            <div class="status-indicator" id="statusIndicator"></div>
+            <span id="statusText">Initializing...</span>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="analyzeBtn" onclick="runAnalysis()">
+                🔍 Run Analysis
+            </button>
+            <button class="btn btn-secondary" id="liveBtn" onclick="startLiveMode()">
+                📡 Live Mode
+            </button>
+            <button class="btn btn-danger" id="stopBtn" onclick="stopLiveMode()" style="display:none;">
+                ⏹️ Stop
+            </button>
+            <a href="/presentation" class="btn btn-secondary"
+                style="text-decoration:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); border:none;">
+                🎓 Presentation
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalPorts">-</div>
+                <div class="stat-label">Total Ports Analyzed</div>
+            </div>
+            <div class="stat-card alert">
+                <div class="stat-icon">🚨</div>
+                <div class="stat-value" id="totalAlerts">-</div>
+                <div class="stat-label">Threats Detected</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="precision">-</div>
+                <div class="stat-label">Precision</div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="recall">-</div>
+                <div class="stat-label">Recall</div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-card">
+                <h3>🥧 Attack Distribution</h3>
+                <canvas id="attackPieChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>📈 Detection by Attack Type</h3>
+                <canvas id="detectionBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel anomalies-panel">
+                <h3>🔴 Top Anomalies</h3>
+                <div class="table-wrapper">
+                    <table id="anomaliesTable">
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th>Score</th>
+                                <th>Type</th>
+                                <th>Req/s</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anomaliesBody">
+                            <tr>
+                                <td colspan="4" class="loading">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel live-panel">
+                <h3>📡 Live Detection Feed</h3>
+                <div class="live-feed" id="liveFeed">
+                    <div class="feed-item info">
+                        System ready. Click "Live Mode" to start real-time simulation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="confusion-matrix-card">
+            <h3>📋 Confusion Matrix</h3>
+            <div class="matrix-grid">
+                <div class="matrix-label"></div>
+                <div class="matrix-label">Pred: Anomaly</div>
+                <div class="matrix-label">Pred: Normal</div>
+                <div class="matrix-label">Actual: Attack</div>
+                <div class="matrix-cell tp" id="cmTP">-</div>
+                <div class="matrix-cell fn" id="cmFN">-</div>
+                <div class="matrix-label">Actual: Normal</div>
+                <div class="matrix-cell fp" id="cmFP">-</div>
+                <div class="matrix-cell tn" id="cmTN">-</div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>AnomXShield v1.0 | ML-Based Intrusion Detection | CICIDS2017 Dataset</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
